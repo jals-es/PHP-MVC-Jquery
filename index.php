@@ -29,6 +29,9 @@
 	</div>
 </div>
 <?php
+	echo "<script src='view/js/credentials.js'></script>";
+?>
+<?php
 	// if ((isset($_GET['page'])) && ($_GET['page']==="controller_prod") ){
 	// 	include("view/inc/bottom_page_prod.html");
 	// }else{

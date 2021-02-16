@@ -14,7 +14,7 @@ if(isset($_GET['page'])){
 			include("module/services/".$_GET['page'].".php");
 			break;
 		case "aboutus";
-			include("module/aboutus/".$_GET['page'].".php");
+			include("module/aboutus/view/about_us.html");
 			break;
 		case "contactus";
 			include("module/contact/".$_GET['page'].".php");

@@ -70,6 +70,12 @@ function load_categories() {
 
         click_categories();
 
+        $(window).on('resize', function() {
+            cw = $('.categoria').width();
+            cw = cw * 0.6
+            $('.categoria').css({ 'height': cw + 'px' });
+        });
+
     }).fail(function(response) {
         window.location.href = "?page=503";
         // console.log(response);
