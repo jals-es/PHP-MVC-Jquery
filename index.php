@@ -20,7 +20,7 @@
     	<?php 
 		    include("view/inc/pages.php"); 
 		?>        
-        <br style="clear:both;" />
+        <!-- <br style="clear:both;" /> -->
 		<div id="footer" class="footer">   	   
 			<?php
 				include("view/inc/footer.html");

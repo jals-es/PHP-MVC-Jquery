@@ -66,6 +66,37 @@ class DAOShop{
 
         return $return;
     }
+
+    function get_range_prices(){
+
+        $conn = conn();
+
+        $sql = "SELECT MIN(precio) min, MAX(precio) max FROM productos";
+
+        $result = $conn -> query($sql);
+
+        $conn -> close();
+
+        $return = $result -> fetch_assoc();
+
+        foreach($return as $index => $valor){
+            $decimales = explode(".", $valor);
+            if($decimales[1] == 00){
+                $return[$index] = round($return[$index]);
+            }else if($decimales[1] < 50 && $index === "max"){
+                $return[$index] = round($return[$index]) + 1;
+            }else if($decimales[1] >= 50 && $index === "max"){
+                $return[$index] = round($return[$index]);
+            }else if($decimales[1] < 50 && $index === "min"){
+                $return[$index] = round($return[$index]);
+            }else if($decimales[1] >= 50 && $index === "min"){
+                $return[$index] = round($return[$index]) - 1;
+            }
+        }
+
+        return $return;
+
+    }
 }
 
 ?>

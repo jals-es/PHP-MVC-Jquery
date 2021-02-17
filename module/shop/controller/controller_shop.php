@@ -78,8 +78,24 @@ if(isset($_GET['op'])){
             if($rdao){
                 echo json_encode($rdao);
             }else{
-                echo "error";
+                echo "false";
             }
+            break;
+        case "get_range_prices":
+            try{
+                $dao = new DAOShop();
+                $rdao = $dao -> get_range_prices();
+            }catch(Exception $e){
+                $callback = '?page=503';
+                die('<script>window.location.href="'.$callback .'";</script>');
+            }
+
+            if($rdao){
+                echo json_encode($rdao);
+            }else{
+                echo "false";
+            }
+            break;
             break;
         default:
             include('view/inc/error404.php');

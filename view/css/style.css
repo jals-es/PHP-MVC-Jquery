@@ -929,8 +929,8 @@ header .container-fluid {
 
 .footer {
     background: #d8b00f;
-    padding: 90px;
-    margin-top: 90px;
+    padding: 5%;
+    /* margin-top: 90px; */
 }
 
 
