@@ -74,11 +74,29 @@ function get_prod(id_prod) {
         $("<div class='button_action go_shop' data-tr='Back'></div>").appendTo('#content-shop');
         change_lang();
         show_shop();
+        set_visita(response.cod_prod);
 
     }).fail(function(response) {
         no_result();
         // window.location.href = "?page=503";
         // console.log(response);
+    });
+}
+
+function set_visita(id_prod) {
+    $.ajax({
+        type: "POST",
+        url: "module/shop/controller/controller_shop.php?op=visit_prod",
+        data: { "id_prod": id_prod },
+        dataType: "JSON"
+    }).done(function(response) {
+
+        console.log(response);
+
+    }).fail(function(response) {
+
+        console.log(response);
+
     });
 }
 

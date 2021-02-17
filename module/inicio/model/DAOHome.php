@@ -9,7 +9,16 @@ class DAOHome{
 
         $conn = conn();
 
-        $sql = "SELECT * FROM productos ORDER BY RAND() LIMIT $limit";
+        $sql = "SELECT p.cod_prod, p.name, p.img
+                FROM productos p LEFT JOIN (
+                    SELECT v.id_prod, COUNT(v.id) veces
+                    FROM visitas_prod v
+                    GROUP BY v.id_prod
+                ) k
+                ON p.cod_prod = k.id_prod
+                ORDER BY k.veces DESC, RAND() 
+                LIMIT $limit
+            ";
 
         $result = $conn -> query($sql);
 

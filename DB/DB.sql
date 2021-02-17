@@ -22,3 +22,19 @@ CREATE TABLE IF NOT EXISTS `categorias` (
   `img` varchar(1000) COLLATE utf8_spanish_ci NOT NULL,
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+CREATE TABLE IF NOT EXISTS `locales` (
+  `id` int(255) NOT NULL AUTO_INCREMENT,
+  `name` varchar(1000) COLLATE utf8_spanish_ci NOT NULL,
+  `lng` decimal(65,38) COLLATE utf8_spanish_ci NOT NULL,
+  `lat` decimal(65,38) COLLATE utf8_spanish_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+CREATE TABLE IF NOT EXISTS `locales` (
+  `id` int(255) NOT NULL AUTO_INCREMENT,
+  `id_user` int(255) NOT NULL,
+  `id_prod` int(255) NOT NULL,
+  `ip` varchar(20) COLLATE utf8_spanish_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;

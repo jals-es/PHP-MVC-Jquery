@@ -49,6 +49,23 @@ class DAOShop{
 
         return $return;
     }
+
+    function visit_prod($id_prod, $id_user){
+
+        $ip = $_SERVER["REMOTE_ADDR"];
+
+        $conn = conn();
+
+        $sql = "INSERT INTO visitas_prod VALUES (NULL, $id_user, $id_prod, '$ip')";
+
+        $result = $conn -> query($sql);
+
+        $return = $result;
+
+        $conn -> close();
+
+        return $return;
+    }
 }
 
 ?>

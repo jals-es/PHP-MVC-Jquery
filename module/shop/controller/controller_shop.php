@@ -59,6 +59,28 @@ if(isset($_GET['op'])){
                 echo "error";
             }
             break;
+        case "visit_prod":
+            if(isset($_POST['id_prod'])){
+
+                $id_user = -1;
+
+                try{
+                    $dao = new DAOShop();
+                    $rdao = $dao -> visit_prod($_POST['id_prod'], $id_user);
+                }catch(Exception $e){
+                    $callback = '?page=503';
+                    die('<script>window.location.href="'.$callback .'";</script>');
+                }
+            }else{
+                $rdao = false;
+            }
+
+            if($rdao){
+                echo json_encode($rdao);
+            }else{
+                echo "error";
+            }
+            break;
         default:
             include('view/inc/error404.php');
             break;
