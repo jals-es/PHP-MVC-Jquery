@@ -1,4 +1,19 @@
 <?php 
+
+if($page === "bottom_page.html"){
+	echo '
+	<script src="view/js/jquery.min.js"></script>
+	<script src="view/js/popper.min.js"></script>
+	<script src="view/js/bootstrap.bundle.min.js"></script>
+	<script src="view/js/owl.carousel.min.js"></script>
+	<script src="view/js/custom.js"></script>
+	<script src="view/js/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script src="view/js/jquery-3.0.0.min.js"></script>
+	<script type="text/javascript" src="view/js/menu.js"></script>
+	<script type="text/javascript" src="view/js/translate.js"></script>
+	';
+}
+
 if(isset($_GET['page'])){
 	switch($_GET['page']){
 		case "homepage";

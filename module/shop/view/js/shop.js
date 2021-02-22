@@ -4,12 +4,18 @@ function show_content() {
     $("#content-shop").empty();
     switch (type) {
         case "prod":
+            console.log("entra al prod");
             get_prod(filter_id);
             break;
         case "catego":
             get_catego(filter_id);
             break;
+        case "search":
+            console.log("entra al search");
+            make_search(filter_id);
+            break;
         default:
+            console.log("entra al default");
             all_shop();
             break;
     }
@@ -91,7 +97,7 @@ function set_visita(id_prod) {
         dataType: "JSON"
     }).done(function(response) {
 
-        console.log(response);
+        // console.log(response);
 
     }).fail(function(response) {
 
@@ -166,6 +172,7 @@ function slider() {
 }
 
 function show_prod() {
+    console.log("carga show prod");
     $('.ver').on('click', function() {
         var id_prod = this.id;
         localStorage.setItem('shop_filter', 'prod');
@@ -194,6 +201,39 @@ function show_shop() {
 function no_result(message) {
     var message = "No se encuentran resultados con estos parametros de busqueda.";
     $('<h1 class="no_result_error">' + message + '</h1>').appendTo('#content-shop');
+}
+
+function make_search(content) {
+    console.log("se dispone a hacer el ajax");
+    $('<div class="shop_title">Buscando por "' + content + '"</div>').appendTo("#content-shop");
+    $.ajax({
+        type: "POST",
+        url: "module/shop/controller/controller_shop.php?op=search",
+        data: { "content": content },
+        dataType: "JSON"
+    }).done(function(response) {
+        console.log("realiza el ajax");
+        console.log(response);
+        if (response.length == 1) {
+            console.log("solo 1 producto");
+            localStorage.setItem('shop_filter', 'prod');
+            localStorage.setItem('shop_filter_id', response[0].cod_prod);
+            show_content();
+        } else {
+            console.log("varios productos");
+            set_catego(response);
+
+            show_prod();
+
+            slider();
+        }
+
+    }).fail(function(response) {
+
+        console.log(response);
+        no_result();
+
+    });
 }
 
 $(document).ready(function() {

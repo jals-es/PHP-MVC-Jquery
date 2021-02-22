@@ -1,5 +1,10 @@
 function show_filters() {
     show_price_range();
+    show_order_by();
+}
+
+function show_order_by() {
+
 }
 
 function show_price_range() {
@@ -12,7 +17,7 @@ function show_price_range() {
         data: { "op": "get_range_prices" },
         dataType: "JSON"
     }).done(function(response) {
-        console.log(response);
+        // console.log(response);
         set_price_range(response);
 
     }).fail(function(response) {

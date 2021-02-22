@@ -97,6 +97,21 @@ class DAOShop{
         return $return;
 
     }
+
+    function search($search){
+
+        $conn = conn();
+
+        $sql = "SELECT DISTINCT * FROM productos WHERE name LIKE '%$search%' OR descripcion LIKE '%$search%' ORDER BY type";
+
+        $result = $conn -> query($sql);
+
+        $return = get_array($result);
+
+        $conn -> close();
+
+        return $return;
+    }
 }
 
 ?>

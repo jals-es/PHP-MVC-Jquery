@@ -21,6 +21,23 @@ if(isset($_GET['op'])){
             }
 
             break;
+        case "search":
+            $rdao = false;
+            if(isset($_POST['search'])){
+                try{
+                    $dao = new DAOGeneral();
+                    $rdao = $dao -> search($_POST['search']);
+                }catch(Exception $e){
+                    $callback = '?page=503';
+                    die('<script>window.location.href="'.$callback .'";</script>');
+                }
+            }
+            if($rdao){
+                echo json_encode($rdao);
+            }else{
+                echo "error";
+            }
+            break;
         default:
             include('view/inc/error404.php');
             break;

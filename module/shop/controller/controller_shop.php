@@ -96,6 +96,24 @@ if(isset($_GET['op'])){
                 echo "false";
             }
             break;
+        case "search":
+            if(isset($_POST['content'])){
+                try{
+                    $dao = new DAOShop();
+                    $rdao = $dao -> search($_POST['content']);
+                }catch(Exception $e){
+                    $callback = '?page=503';
+                    die('<script>window.location.href="'.$callback .'";</script>');
+                }
+            }else{
+                $rdao = false;
+            }
+
+            if($rdao){
+                echo json_encode($rdao);
+            }else{
+                echo "error";
+            }
             break;
         default:
             include('view/inc/error404.php');

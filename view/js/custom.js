@@ -321,6 +321,9 @@ $(function() {
 
 });
 
+// MIS SCRIPTS GENERALES
+
 $(document).ready(function() {
     set_api();
+    show_search("#myDropdown");
 });
