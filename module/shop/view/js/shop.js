@@ -16,30 +16,108 @@ function show_content() {
             break;
         default:
             console.log("entra al default");
-            all_shop();
+            all_shop(0);
             break;
     }
 }
 
-function all_shop() {
+function all_shop(offset) {
+    var limit = 12;
     $.ajax({
-        type: "GET",
+        type: "POST",
         url: "module/shop/controller/controller_shop.php?op=all_prod",
+        data: { "offset": offset, "limit": limit },
         dataType: "JSON"
     }).done(function(response) {
         // console.log(response);
 
-        set_catego(response);
+        // set_catego(response);
+        set_all_prods(response, limit, offset);
 
         show_prod();
 
-        slider();
+        // slider();
 
     }).fail(function(response) {
         no_result();
         // window.location.href = "?page=503";
         // console.log(response);
     });
+}
+
+function set_all_prods(response, limit, offset) {
+    var i = 0;
+    $("<div></div>").attr({ "id": "all_shop_content" }).appendTo("#content-shop");
+    for (row in response) {
+        if (row != 0) {
+            $("<div></div>").attr({ "class": "prod_content" }).appendTo("#all_shop_content")
+                .html('<div class="img-prod"><img src="view/img/uploads/' + response[row].img + '" alt="Generic placeholder image"></div>' +
+                    '<h4>' + response[row].name + '</h4>' +
+                    '<h5>' + response[row].precio + '€</h5>' +
+                    '<p><a id="' + response[row].cod_prod + '" class="btn btn-default ver" role="button">Ver &raquo;</a></p>');
+            i++;
+        }
+    }
+    set_paginacio(response[0].total, limit, offset);
+}
+
+function set_paginacio(total, limit, offset) {
+    $("<div></div>").attr({ "class": "paginacio" }).appendTo("#content-shop");
+    var pag = Math.ceil(total / limit);
+    var i = 1;
+    var prods = 0;
+
+    // alert(pag);
+    console.log(offset);
+    $("<span>&#60;&#60;</span>").attr({ "class": "btn_nav", "id": "nav-arrere", "data-offset": offset }).appendTo(".paginacio");
+    while (i <= pag) {
+        if (offset >= prods && offset < prods + limit) {
+            $("<span>" + i + "</span>").attr({ "class": "btn_paginacio btn_active", "data-offset": prods }).appendTo(".paginacio");
+        } else {
+            $("<span>" + i + "</span>").attr({ "class": "btn_paginacio", "data-offset": prods }).appendTo(".paginacio");
+        }
+
+        prods = prods + limit;
+        i++;
+    }
+    $("<span>&#62;&#62;</span>").attr({ "class": "btn_nav", "id": "nav-avant", "data-offset": offset }).appendTo(".paginacio");
+
+    $(".btn_paginacio").on("click", function() {
+        var offset = this.getAttribute("data-offset");
+        $('.loader_bg').fadeToggle();
+        setTimeout(function() {
+            $("#content-shop").empty();
+            all_shop(offset);
+            $('.loader_bg').fadeToggle();
+        }, 500);
+    });
+
+    $(".btn_nav").on("click", function() {
+        btn_nav(this.id, this.getAttribute("data-offset"), limit, pag);
+    });
+
+}
+
+function btn_nav(action, offset, limit, pag) {
+
+    if (action == "nav-arrere") {
+        offset = parseInt(offset) - parseInt(limit);
+    } else {
+        offset = parseInt(offset) + parseInt(limit);
+    }
+
+    if (offset < 0) {
+        offset = 0;
+    } else if (offset > pag * limit - 1) {
+        offset = pag * limit - limit;
+    }
+
+    $('.loader_bg').fadeToggle();
+    setTimeout(function() {
+        $("#content-shop").empty();
+        all_shop(offset);
+        $('.loader_bg').fadeToggle();
+    }, 500);
 }
 
 function get_prod(id_prod) {

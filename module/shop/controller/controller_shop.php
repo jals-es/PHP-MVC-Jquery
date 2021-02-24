@@ -45,12 +45,14 @@ if(isset($_GET['op'])){
             }
             break;
         case "all_prod":
-            try{
-                $dao = new DAOShop();
-                $rdao = $dao -> get_all_prods();
-            }catch(Exception $e){
-                $callback = '?page=503';
-                die('<script>window.location.href="'.$callback .'";</script>');
+            if(isset($_POST['offset']) && isset($_POST['limit'])){
+                try{
+                    $dao = new DAOShop();
+                    $rdao = $dao -> get_all_prods($_POST['offset'], $_POST['limit']);
+                }catch(Exception $e){
+                    $callback = '?page=503';
+                    die('<script>window.location.href="'.$callback .'";</script>');
+                }
             }
 
             if($rdao){

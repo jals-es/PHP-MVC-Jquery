@@ -5,15 +5,26 @@ include( $path."model/connect.php");
     
 class DAOShop{
 
-    function get_all_prods(){
+    function get_all_prods($offset, $limit){
 
         $conn = conn();
 
-        $sql = "SELECT * FROM productos ORDER BY type";
+        $sql = "SELECT * FROM productos LIMIT $offset,$limit";
+        $sql2 = "SELECT COUNT(*) total FROM productos";
 
         $result = $conn -> query($sql);
+        $result2 = $conn -> query($sql2);
 
-        $return = get_array($result);
+        if($result -> num_rows > 0){
+            $return = array($result2 -> fetch_assoc());
+            $i = 1;
+            while($row = $result -> fetch_assoc()){
+                $return[$i] = $row;
+                $i++;
+            }
+        }else{
+            $return = false;
+		}
 
         $conn -> close();
 
