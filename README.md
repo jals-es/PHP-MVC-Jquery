@@ -2,7 +2,7 @@
 
 _Project of the second quarter of 1st of Web Applications Development_
 
-<h3 align="center"><strong>JUAN ANTONIO LÓPEZ SEGUÍ (<a href="https://jals.es">jals.es</a>)</strong></h3>
+<h3 align="center"><strong>JUAN ANTONIO LÓPEZ SEGUÍ (<a href="https://jals.es" target="_blank">jals.es</a>)</strong></h3>
 
 ## INDEX
 
@@ -32,6 +32,12 @@ _Project of the second quarter of 1st of Web Applications Development_
 [js]: <https://es.wikipedia.org/wiki/JavaScript>
 [Bootstrap]: <https://getbootstrap.com/>
 
+## Template
+
+* [Spicyo] - Used for header, menu and footer.
+
+[Spicyo]: <https://www.free-css.com/free-css-templates/page261/spicyo>
+
  ### Features
 
 | Page | Features |
@@ -44,10 +50,6 @@ _Project of the second quarter of 1st of Web Applications Development_
 | Footer | GMaps, InfoWindow, Marker, Hidden Api Key |
 
 
-
-## Template
-
-* Spicyo <https://www.free-css.com/free-css-templates/page261/spicyo>
 
 ## Working in all website
 
