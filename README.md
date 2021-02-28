@@ -1,14 +1,16 @@
-# PHP-MVC-Jquery | RESTAURANTE
+# PHP-MVC-Jquery | RESTAURANT
 
 _Project of the second quarter of 1st of Web Applications Development_
 
-<h3 align="center"><strong>JUAN ANTONIO LÓPEZ SEGUÍ (<a href="https://jals.es" target="_blank">jals.es</a>)</strong></h3>
+<h3 align="center"><strong>JUAN ANTONIO LÓPEZ SEGUÍ (<a href="https://jals.es">www.jals.es</a>)</strong></h3>
 
 ## INDEX
 
 * About this project
 * Built With
+* Template
 * Features
+* Working in all website
 * License
 
          
@@ -32,13 +34,13 @@ _Project of the second quarter of 1st of Web Applications Development_
 [js]: <https://es.wikipedia.org/wiki/JavaScript>
 [Bootstrap]: <https://getbootstrap.com/>
 
-## Template
+## TEMPLATE
 
 * [Spicyo] - Used for header, menu and footer.
 
 [Spicyo]: <https://www.free-css.com/free-css-templates/page261/spicyo>
 
- ### Features
+## FEATURES
 
 | Page | Features |
 |---------|-------------|
@@ -47,16 +49,17 @@ _Project of the second quarter of 1st of Web Applications Development_
 | Shop | List, Pagination, Category sliders, Search view, No result view, Details, Filters|
 | Products list | Datatable, Modal, Delete All, CRUD, JS/PHP validation, Error messages|
 | Details products | All information about the specific product, Show related products with a Google Books Api, Show More button|
-| Footer | GMaps, InfoWindow, Marker, Hidden Api Key |
+| Footer | GMaps with the position of our restaurants, InfoWindow, Marker, Hidden Api Key, Zoom to customer position|
 
 
 
-## Working in all website
+## WORKING IN ALL WEBSITE
 
 * Translate
 * Loading screen
+* GMaps
 
-## License
+## LICENSE
 
  Creative Commons Attribution 3.0 Unported.
 
