@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `locales` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
-CREATE TABLE IF NOT EXISTS `locales` (
+CREATE TABLE IF NOT EXISTS `visitas_prod` (
   `id` int(255) NOT NULL AUTO_INCREMENT,
   `id_user` int(255) NOT NULL,
   `id_prod` int(255) NOT NULL,
