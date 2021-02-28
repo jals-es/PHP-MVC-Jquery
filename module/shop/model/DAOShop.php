@@ -5,12 +5,53 @@ include( $path."model/connect.php");
     
 class DAOShop{
 
-    function get_all_prods($offset, $limit){
+    function get_all_prods($offset, $limit, $catego, $price_min, $price_max, $ingredientes){
+
+        $where = false;
+
+        if(empty($catego)){
+            $sql_catego = "";
+        }else if($catego === "all"){
+            $sql_catego = "type LIKE '%%'";
+        }else{
+            $sql_catego = "type LIKE '%$catego%'";
+            $where = true;
+        }
+
+        $sql_price = "";
+        if(!empty($price_max)){
+            $sql_price = "precio BETWEEN $price_min AND $price_max";
+            $where = true;
+        }
+        
+        $sentencia = $sql_catego." AND ".$sql_price;
+        
+        $i = 0;
+        $sql_ingredientes = "";
+        if(!empty($ingredientes)){
+            foreach($ingredientes as $ing){
+                if($i == 0){
+                    $where = true;
+                    $sql_ingredientes = "$sentencia AND ingredientes LIKE '%$ing%'";
+                }else{
+                    $sql_ingredientes .= " OR $sentencia AND ingredientes LIKE '%$ing%'";
+                }
+                $i++;
+            }
+        }
+
+        if($where == true){
+            $where = "WHERE $sql_ingredientes";
+        }else{
+            $where = "";
+        }
 
         $conn = conn();
 
-        $sql = "SELECT * FROM productos LIMIT $offset,$limit";
-        $sql2 = "SELECT COUNT(*) total FROM productos";
+        $sql = "SELECT * FROM productos $where LIMIT $offset,$limit";
+        $sql2 = "SELECT COUNT(*) total FROM productos $where";
+
+        // echo $sql;
 
         $result = $conn -> query($sql);
         $result2 = $conn -> query($sql2);
@@ -118,6 +159,50 @@ class DAOShop{
         $result = $conn -> query($sql);
 
         $return = get_array($result);
+
+        $conn -> close();
+
+        return $return;
+    }
+
+    function get_catego(){
+        $conn = conn();
+
+        $sql = "SELECT c.name, COUNT(p.cod_prod) nprods
+                FROM categorias c INNER JOIN productos p
+                ON c.name = p.type
+                GROUP BY c.name";
+
+        $result = $conn -> query($sql);
+
+        $return = get_array($result);
+
+        $conn -> close();
+
+        return $return;
+    }
+
+    function get_ingredientes(){
+        $conn = conn();
+
+        $sql = "SELECT DISTINCT ingredientes
+                FROM productos";
+
+        $result = $conn -> query($sql);
+
+        if($result -> num_rows > 0){
+            $return = array();
+            while($row = $result -> fetch_assoc()){
+                $line = explode(":", $row['ingredientes']);
+                foreach($line as $ing){
+                    $return = array_unique($return);
+                    $return[] = $ing;
+                }
+            }
+            $return = array_unique($return);
+        }else{
+            $return = false;
+		}
 
         $conn -> close();
 

@@ -4,18 +4,18 @@ function show_content() {
     $("#content-shop").empty();
     switch (type) {
         case "prod":
-            console.log("entra al prod");
+            // console.log("entra al prod");
             get_prod(filter_id);
             break;
         case "catego":
             get_catego(filter_id);
             break;
         case "search":
-            console.log("entra al search");
+            // console.log("entra al search");
             make_search(filter_id);
             break;
         default:
-            console.log("entra al default");
+            // console.log("entra al default");
             all_shop(0);
             break;
     }
@@ -23,10 +23,44 @@ function show_content() {
 
 function all_shop(offset) {
     var limit = 12;
+
+    var filters = get_filters();
+    var catego;
+    var price_min;
+    var price_max;
+    var ingredientes;
+    if (filters == false) {
+        filters = "";
+        catego = "";
+        price_min = "";
+        price_max = "";
+        ingredientes = "";
+    } else {
+        filters = filters.split(";");
+        for (i = 0; i < filters.length; i++) {
+            switch (i) {
+                case 0:
+                    catego = filters[i];
+                    break;
+                case 1:
+                    price_min = filters[i];
+                    break;
+                case 2:
+                    price_max = filters[i];
+                    break;
+                case 3:
+                    ingredientes = filters[i];
+                    break;
+            }
+        }
+    }
+
+
+
     $.ajax({
         type: "POST",
         url: "module/shop/controller/controller_shop.php?op=all_prod",
-        data: { "offset": offset, "limit": limit },
+        data: { "offset": offset, "limit": limit, "catego": catego, "price_min": price_min, "price_max": price_max, "ingredientes": ingredientes },
         dataType: "JSON"
     }).done(function(response) {
         // console.log(response);
@@ -39,6 +73,7 @@ function all_shop(offset) {
         // slider();
 
     }).fail(function(response) {
+        // console.log(response.responseText);
         no_result();
         // window.location.href = "?page=503";
         // console.log(response);
@@ -68,7 +103,7 @@ function set_paginacio(total, limit, offset) {
     var prods = 0;
 
     // alert(pag);
-    console.log(offset);
+    // console.log(offset);
     $("<span>&#60;&#60;</span>").attr({ "class": "btn_nav", "id": "nav-arrere", "data-offset": offset }).appendTo(".paginacio");
     while (i <= pag) {
         if (offset >= prods && offset < prods + limit) {
@@ -127,12 +162,15 @@ function get_prod(id_prod) {
         dataType: "JSON"
     }).done(function(response) {
         // console.log(response);
-
+        $("<div id='details'></div>").appendTo('#content-shop');
         var content = "";
         var ingredientes = "";
         var ingre = "";
         for (row in response) {
             switch (row) {
+                case "cod_prod":
+                    content += '<h1>' + row + ': <span id =' + row + '>' + response[row] + '</span></h1>';
+                    break;
                 case "ingredientes":
                     ingredientes = response[row].split(":");
                     for (ing in ingredientes) {
@@ -142,23 +180,26 @@ function get_prod(id_prod) {
                             ingre += ", " + ingredientes[ing];
                         }
                     }
-                    content += '<br><span>' + row + ': <span id =' + row + '>' + ingre + '</span></span>';
+                    content += '<div>' + row + ': <span id =' + row + '>' + ingre + '</span></div>';
                     break;
                 case "img":
-                    content += '<br><span><img src="view/img/uploads/' + response[row] + '"></span>';
+                    content += '<div class="prod-img"><img src="view/img/uploads/' + response[row] + '"></div>';
                     break;
                 default:
-                    content += '<br><span>' + row + ': <span id =' + row + '>' + response[row] + '</span></span>';
+                    content += '<div>' + row + ': <span id =' + row + '>' + response[row] + '</span></div>';
                     break;
             }
         }
 
-        $("<div class='prod-info'></div>").appendTo('#content-shop')
+        $("<div class='prod-info'></div>").appendTo('#details')
             .html(content);
-        $("<div class='button_action go_shop' data-tr='Back'></div>").appendTo('#content-shop');
+        $("<div class='button_action go_shop' data-tr='Back'></div>").appendTo('.prod-info');
         change_lang();
         show_shop();
         set_visita(response.cod_prod);
+        $("<p>Libros Relacionados:</p>").attr({ "class": "related-title" }).appendTo("#details");
+        $("<div></div>").attr({ "id": "all_shop_content", "style": "width: 100% !important; display: flex-box !important;" }).appendTo("#details");
+        show_related(0);
 
     }).fail(function(response) {
         no_result();
@@ -250,7 +291,7 @@ function slider() {
 }
 
 function show_prod() {
-    console.log("carga show prod");
+    // console.log("carga show prod");
     $('.ver').on('click', function() {
         var id_prod = this.id;
         localStorage.setItem('shop_filter', 'prod');
@@ -258,8 +299,10 @@ function show_prod() {
         $('.loader_bg').fadeToggle();
         setTimeout(function() {
             show_content();
-            $('.loader_bg').fadeToggle();
         }, 500);
+        setTimeout(function() {
+            $('.loader_bg').fadeToggle();
+        }, 1000);
 
     });
 }
@@ -282,7 +325,7 @@ function no_result(message) {
 }
 
 function make_search(content) {
-    console.log("se dispone a hacer el ajax");
+    // console.log("se dispone a hacer el ajax");
     $('<div class="shop_title">Buscando por "' + content + '"</div>').appendTo("#content-shop");
     $.ajax({
         type: "POST",
@@ -290,15 +333,15 @@ function make_search(content) {
         data: { "content": content },
         dataType: "JSON"
     }).done(function(response) {
-        console.log("realiza el ajax");
-        console.log(response);
+        // console.log("realiza el ajax");
+        // console.log(response);
         if (response.length == 1) {
             console.log("solo 1 producto");
             localStorage.setItem('shop_filter', 'prod');
             localStorage.setItem('shop_filter_id', response[0].cod_prod);
             show_content();
         } else {
-            console.log("varios productos");
+            // console.log("varios productos");
             set_catego(response);
 
             show_prod();
@@ -311,6 +354,60 @@ function make_search(content) {
         console.log(response);
         no_result();
 
+    });
+}
+
+function show_related(limit) {
+
+    limit = limit + 3;
+
+    $.ajax({
+        type: "GET",
+        url: "https://www.googleapis.com/books/v1/volumes",
+        data: { "q": "cooking" },
+        dataType: "JSON"
+    }).done(function(response) {
+        // console.log(response);
+        var item;
+        var more = true;
+        if (limit >= response.items.length) {
+            limit = response.items.length;
+            more = false;
+        }
+        for (row = 0; row < limit; row++) {
+            item = response.items[row];
+            // console.log(item);
+            if (item !== null) {
+                $("<div></div>").attr({ "id": item.id, "class": "prod_content" }).appendTo("#all_shop_content")
+                    .html('<div class="img-prod"><img src="' + item.volumeInfo.imageLinks.thumbnail + '" alt="Generic placeholder image"></div>' +
+                        '<h4>' + item.volumeInfo.title + '</h4>' +
+                        '<p><a class="btn btn-default" href="' + item.volumeInfo.previewLink + '" role="button" target="_blank">Ver &raquo;</a></p>');
+            }
+        }
+
+        if (more) {
+            $("<div>Ver más...</div>").attr({ "id": "show_more" }).appendTo("#all_shop_content");
+
+            event_show_more(limit);
+        }
+
+
+    }).fail(function(response) {
+        console.log(response);
+    });
+}
+
+function event_show_more(limit) {
+    $("#show_more").on("click", function() {
+        // console.log(limit);
+        $('.loader_bg').fadeToggle();
+        setTimeout(function() {
+            $("#all_shop_content").empty();
+            show_related(limit);
+        }, 500);
+        setTimeout(function() {
+            $('.loader_bg').fadeToggle();
+        }, 1000);
     });
 }
 

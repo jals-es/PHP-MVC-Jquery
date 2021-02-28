@@ -1106,6 +1106,10 @@ function print_range_inp(where) {
                     });
                 }
             });
+
+            if (event == "end") {
+                change_filters();
+            }
         }
         // Returns the input array, respecting the slider direction configuration.
 

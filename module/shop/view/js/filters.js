@@ -1,13 +1,31 @@
 function show_filters() {
+    show_filter_categories();
     show_price_range();
-    show_order_by();
+    show_filter_ingredientes();
 }
 
-function show_order_by() {
+function show_filter_categories() {
+    $("<h3>Categorías:</h3>").attr({ "id": "title_filter_categories" }).appendTo("#options-bar");
+    $("<select></select>").attr({ "id": "filter_categories" }).appendTo("#options-bar");
+    $("<option>Todas</option>").attr({ "value": "all" }).appendTo("#filter_categories");
+    $.ajax({
+        type: "GET",
+        url: "module/shop/controller/controller_shop.php",
+        data: { "op": "get_catego" },
+        dataType: "JSON"
+    }).done(function(response) {
 
+        for (row in response) {
+            $("<option><span>" + response[row].name + "</span><span>(" + response[row].nprods + ")</span></option>").attr({ "value": response[row].name }).appendTo("#filter_categories");
+        }
+    });
+
+    event_filter_categories();
 }
 
 function show_price_range() {
+
+    $("<h3>Precio:</h3>").attr({ "style": "margin-top: 25px;" }).appendTo("#options-bar");
 
     print_range_inp("#options-bar");
 
@@ -23,10 +41,32 @@ function show_price_range() {
     }).fail(function(response) {
         var price = { "min": "0", "max": "9999999" }
         set_price_range(price);
-
     });
 
 
+}
+
+function show_filter_ingredientes() {
+    $("<h3>Ingredientes:</h3>").attr({ "id": "title_filter_ingredientes" }).appendTo("#options-bar");
+    $("<div></div").attr({ "id": "filter_ingredientes" }).appendTo("#options-bar");
+    $.ajax({
+        type: "GET",
+        url: "module/shop/controller/controller_shop.php",
+        data: { "op": "get_ingredientes" },
+        dataType: "JSON"
+    }).done(function(response) {
+        // console.log(response);
+        for (row in response) {
+            $('<input type="checkbox" checked/>').attr({ "value": response[row], "name": "filter_ing[]" }).appendTo("#filter_ingredientes");
+            $('<label>' + response[row] + '</label><br>').attr({ "class": "ml-1" }).appendTo("#filter_ingredientes");
+        }
+
+        event_filter_ingredientes();
+
+    }).fail(function(response) {
+        console.log(response);
+
+    });
 }
 
 function set_price_range(price) {
@@ -35,9 +75,8 @@ function set_price_range(price) {
     });
     var rangeSlider = document.getElementById('slider-range');
     var moneyFormat = wNumb({
-        decimals: 2,
-        thousand: '',
-        prefix: '€'
+        decimals: 0,
+        thousand: ''
     });
     noUiSlider.create(rangeSlider, {
         start: [price.min, price.max],
@@ -59,8 +98,76 @@ function set_price_range(price) {
         document.getElementsByName('max-value').value = moneyFormat.from(
             values[1]);
     });
+
+    // event_filter_price();
+}
+
+function event_filter_categories() {
+    $("#filter_categories").on("change", function() {
+        change_filters();
+    });
+}
+
+function event_filter_ingredientes() {
+    $("input[name='filter_ing[]']").on("change", function() {
+        change_filters();
+    });
+}
+
+function change_filters() {
+
+    var categories = $("#filter_categories").val();
+    var price_min = $("#slider-range-value1").text();
+    var price_max = $("#slider-range-value2").text();
+
+    var get_ing = $("input[name='filter_ing[]']:checked");
+    if (get_ing.length > 0) {
+        for (i = 0; i < get_ing.length; i++) {
+            if (i == 0) {
+                var ing = get_ing[i].value;
+            } else {
+                ing = ing + ":" + get_ing[i].value;
+            }
+        }
+
+        var filters = categories + ";" + price_min + ";" + price_max + ";" + ing;
+
+
+
+        if (localStorage.getItem("filters_shop") !== null) {
+            localStorage.setItem("filters_shop", filters);
+            $('.loader_bg').fadeToggle();
+            setTimeout(function() {
+                $("#content-shop").empty();
+                all_shop(0);
+                $('.loader_bg').fadeToggle();
+            }, 500);
+        } else {
+            localStorage.setItem("filters_shop", filters);
+        }
+    } else if (localStorage.getItem("filters_shop") !== null) {
+        $('.loader_bg').fadeToggle();
+        setTimeout(function() {
+            $("#content-shop").empty();
+            no_result();
+            $('.loader_bg').fadeToggle();
+        }, 500);
+    }
+}
+
+function get_filters() {
+
+    var filters = localStorage.getItem("filters_shop");
+    if (filters === null) {
+        change_filters();
+        return false;
+    } else {
+        return filters;
+    }
 }
 
 $(document).ready(function() {
     show_filters();
 });
+
+localStorage.removeItem("filters_shop");

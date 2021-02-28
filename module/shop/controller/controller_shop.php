@@ -46,9 +46,20 @@ if(isset($_GET['op'])){
             break;
         case "all_prod":
             if(isset($_POST['offset']) && isset($_POST['limit'])){
+
+                $catego = $_POST['catego'];
+                $price_min = $_POST['price_min'];
+                $price_max = $_POST['price_max'];
+                if(!empty($_POST['ingredientes'])){
+                    $ingredientes = explode(":", $_POST['ingredientes']);
+                }else{
+                    $ingredientes = "";
+                }
+                
+
                 try{
                     $dao = new DAOShop();
-                    $rdao = $dao -> get_all_prods($_POST['offset'], $_POST['limit']);
+                    $rdao = $dao -> get_all_prods($_POST['offset'], $_POST['limit'], $catego, $price_min, $price_max, $ingredientes);
                 }catch(Exception $e){
                     $callback = '?page=503';
                     die('<script>window.location.href="'.$callback .'";</script>');
@@ -109,6 +120,36 @@ if(isset($_GET['op'])){
                 }
             }else{
                 $rdao = false;
+            }
+
+            if($rdao){
+                echo json_encode($rdao);
+            }else{
+                echo "error";
+            }
+            break;
+        case "get_catego":
+            try{
+                $dao = new DAOShop();
+                $rdao = $dao -> get_catego();
+            }catch(Exception $e){
+                $callback = '?page=503';
+                die('<script>window.location.href="'.$callback .'";</script>');
+            }
+
+            if($rdao){
+                echo json_encode($rdao);
+            }else{
+                echo "error";
+            }
+            break;
+        case "get_ingredientes":
+            try{
+                $dao = new DAOShop();
+                $rdao = $dao -> get_ingredientes();
+            }catch(Exception $e){
+                $callback = '?page=503';
+                die('<script>window.location.href="'.$callback .'";</script>');
             }
 
             if($rdao){
