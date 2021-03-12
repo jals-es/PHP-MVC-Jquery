@@ -321,9 +321,27 @@ $(function() {
 
 });
 
+// LOGIN REGISTER
+
+function set_log_reg_btn() {
+
+    $("#log-btn").on("click", function() {
+        sessionStorage.setItem("login_page", "1");
+        window.location.href = "?page=login";
+    });
+
+    $("#reg-btn").on("click", function() {
+        sessionStorage.setItem("login_page", "2");
+        window.location.href = "?page=login";
+    });
+
+}
+
+
 // MIS SCRIPTS GENERALES
 
 $(document).ready(function() {
     set_api();
+    set_log_reg_btn();
     show_search("#myDropdown");
 });

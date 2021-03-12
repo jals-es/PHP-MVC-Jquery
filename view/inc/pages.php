@@ -1,6 +1,9 @@
 <?php
 if(isset($_GET['page'])){
 	switch($_GET['page']){
+		case "login":
+			include("module/login/view/login.html");
+			break;
 		case "homepage";
 			include("module/inicio/view/inicio.html");
 			break;

@@ -375,6 +375,17 @@ header .container-fluid {
 }
 
 
+/** LOGIN REGISTER **/
+
+#log-btn {
+    cursor: pointer;
+}
+
+#reg-btn {
+    cursor: pointer;
+}
+
+
 /** SEARCH **/
 
 

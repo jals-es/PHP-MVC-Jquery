@@ -16,6 +16,9 @@ if($page === "bottom_page.html"){
 
 if(isset($_GET['page'])){
 	switch($_GET['page']){
+		case "login":
+			include("module/login/view/".$page);
+			break;
 		case "homepage";
 			include("module/inicio/view/".$page);
 			break;
