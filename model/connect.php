@@ -1,4 +1,5 @@
 <?php
+
 	function conn(){
 		$host = 'localhost';
     	$user = "root";
